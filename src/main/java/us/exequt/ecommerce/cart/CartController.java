@@ -5,10 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.exequt.ecommerce.cart.dto.AddCartItemRequest;
 import us.exequt.ecommerce.cart.dto.CartResponse;
-import us.exequt.ecommerce.cart.dto.UpdateCartItemRequest;
 import us.exequt.ecommerce.shared.RestResponse;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,9 +31,27 @@ public class CartController {
         return ResponseEntity.ok(RestResponse.success("Item added to cart successfully", updatedCart));
     }
 
-    @PutMapping("/{cartId}/items/{itemId}")
-    public ResponseEntity<RestResponse<CartResponse>> updateItemInCart(@PathVariable UUID cartId, @PathVariable UUID itemId, UpdateCartItemRequest request) {
-        CartResponse updatedCart = cartService.updateItemInCart(cartId, itemId, request);
+    @PatchMapping("/{cartId}/items/{itemId}")
+    public ResponseEntity<RestResponse<CartResponse>> updateItemInCart(@PathVariable UUID cartId, @PathVariable UUID itemId, @RequestParam int quantity) {
+        CartResponse updatedCart = cartService.updateItemInCart(cartId, itemId, quantity);
         return ResponseEntity.ok(RestResponse.success("Item with id: " + itemId + " was updated successfully", updatedCart));
+    }
+
+    @PostMapping("/{cartId}/checkout")
+    public ResponseEntity<RestResponse<CartResponse>> checkout(@PathVariable UUID cartId) {
+        CartResponse lockedCart = cartService.checkout(cartId);
+        return ResponseEntity.ok(RestResponse.success("Cart with id: " + cartId + " was checked out successfully", lockedCart));
+    }
+
+    @GetMapping("/{cartId}")
+    public ResponseEntity<RestResponse<CartResponse>> getCartById(@PathVariable UUID cartId) {
+        CartResponse cart = cartService.getById(cartId);
+        return ResponseEntity.ok(RestResponse.success("Cart retrieved successfully", cart));
+    }
+
+    @GetMapping
+    public ResponseEntity<RestResponse<Iterable<CartResponse>>> getAllCarts() {
+        List<CartResponse> carts = cartService.getAll();
+        return ResponseEntity.ok(RestResponse.success("Carts retrieved successfully", carts));
     }
 }

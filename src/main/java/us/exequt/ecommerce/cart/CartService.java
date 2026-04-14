@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import us.exequt.ecommerce.cart.dto.AddCartItemRequest;
 import us.exequt.ecommerce.cart.dto.CartResponse;
-import us.exequt.ecommerce.cart.dto.UpdateCartItemRequest;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,6 +20,9 @@ public class CartService implements CartFacade {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + cartId));
 
+        if (cart.getStatus().equals(CartStatus.INACTIVE))
+            throw new CartLockedException("Cart with id: " + cartId + " is locked and cannot be modified");
+
         CartItem cartItem = cartItemDtoToEntityMapper.apply(request);
         cart.addItem(cartItem);
         Cart updatedCart = cartRepository.save(cart);
@@ -28,7 +31,7 @@ public class CartService implements CartFacade {
     }
 
     @Override
-    public CartResponse updateItemInCart(UUID cartId, UUID itemId, UpdateCartItemRequest request) {
+    public CartResponse updateItemInCart(UUID cartId, UUID itemId, int quantity) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + cartId));
 
@@ -40,17 +43,21 @@ public class CartService implements CartFacade {
                 .findFirst()
                 .orElseThrow(() -> new CartItemNotFoundException("Item not found with id: " + itemId));
 
-        cartItem.setQuantity(request.getQuantity());
-        cartItem.setPrice(request.getPrice());
-        cartItem.setProductId(request.getProductId());
+        cartItem.setQuantity(quantity);
         Cart updatedCart = cartRepository.save(cart);
 
         return cartEntityToDtoMapper.apply(updatedCart);
     }
 
     @Override
-    public void lockCart(UUID cartId) {
+    public CartResponse checkout(UUID cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + cartId));
 
+        //TODO:: create an order
+        cart.setStatus(CartStatus.INACTIVE);
+        Cart lockedCart = cartRepository.save(cart);
+        return cartEntityToDtoMapper.apply(lockedCart);
     }
 
     @Override
@@ -60,16 +67,19 @@ public class CartService implements CartFacade {
 
     @Override
     public CartResponse getById(UUID id) {
-        return null;
+        return cartEntityToDtoMapper.apply(cartRepository.findById(id)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + id)));
     }
 
     @Override
-    public CartResponse update(UUID id, CartResponse dto) {
-        return null;
+    public List<CartResponse> getAll() {
+        return cartRepository.findAll().stream()
+                .map(cartEntityToDtoMapper)
+                .toList();
     }
 
     @Override
     public void delete(UUID id) {
-
+        cartRepository.deleteById(id);
     }
 }

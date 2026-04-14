@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import us.exequt.ecommerce.cart.dto.CartResponse;
 
+import java.math.BigDecimal;
 import java.util.function.Function;
 
 @Component
@@ -19,6 +20,14 @@ public class CartEntityToDtoMapper implements Function<Cart, CartResponse> {
                         .stream()
                         .map(cartItemEntityToDtoMapper)
                         .toList())
+                .status(cart.getStatus())
+                .totalPrice(cart.getItems().stream()
+                        .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                        .reduce(BigDecimal::add)
+                        .orElse(BigDecimal.ZERO))
+                .createdAt(cart.getCreatedAt())
+                .updatedAt(cart.getUpdatedAt())
+                .version(cart.getVersion())
                 .build();
     }
 }
