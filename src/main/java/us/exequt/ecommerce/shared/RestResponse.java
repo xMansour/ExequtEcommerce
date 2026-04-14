@@ -1,6 +1,7 @@
 package us.exequt.ecommerce.shared;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RestResponse<T> {
 
     private boolean success;
+    private Integer status;
+    private String path;
     private String message;
     private T data;
     private List<String> errors;
@@ -35,24 +39,20 @@ public class RestResponse<T> {
                 .build();
     }
 
-    public static <T> RestResponse<T> error(String message) {
+    public static <T> RestResponse<T> error(int status, String path, String message) {
         return RestResponse.<T>builder()
                 .success(false)
+                .status(status)
+                .path(path)
                 .message(message)
                 .build();
     }
 
-    public static <T> RestResponse<T> error(String message, T data) {
+    public static <T> RestResponse<T> error(int status, String path, String message, List<String> errors) {
         return RestResponse.<T>builder()
                 .success(false)
-                .message(message)
-                .data(data)
-                .build();
-    }
-
-    public static <T> RestResponse<T> error(String message, List<String> errors) {
-        return RestResponse.<T>builder()
-                .success(false)
+                .status(status)
+                .path(path)
                 .message(message)
                 .errors(errors)
                 .build();
