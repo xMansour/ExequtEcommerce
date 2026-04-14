@@ -93,9 +93,4 @@ public class CartService implements CartFacade {
                 .map(cartEntityToDtoMapper)
                 .toList();
     }
-
-    @Override
-    public void delete(UUID id) {
-        cartRepository.deleteById(id);
-    }
 }

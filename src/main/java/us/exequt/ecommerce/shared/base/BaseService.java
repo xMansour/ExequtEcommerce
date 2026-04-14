@@ -5,5 +5,4 @@ import java.util.List;
 public interface BaseService<T, K> {
     T getById(K id);
     List<T> getAll();
-    void delete(K id);
 }

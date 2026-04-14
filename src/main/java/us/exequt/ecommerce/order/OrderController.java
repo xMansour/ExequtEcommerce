@@ -16,7 +16,7 @@ public class OrderController {
     private final OrderFacade orderService;
 
     @GetMapping
-    public ResponseEntity<RestResponse<Iterable<OrderResponse>>> getAllOrders() {
+    public ResponseEntity<RestResponse<List<OrderResponse>>> getAllOrders() {
         List<OrderResponse> orders = orderService.getAll();
         return ResponseEntity.ok(RestResponse.success("Orders retrieved successfully", orders));
     }

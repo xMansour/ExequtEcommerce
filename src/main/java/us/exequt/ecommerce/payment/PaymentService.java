@@ -62,12 +62,4 @@ public class PaymentService implements PaymentFacade {
                 .map(paymentAttemptToPaymentAttemptResponseMapper)
                 .toList();
     }
-
-    @Override
-    public void delete(UUID id) {
-        if (!paymentRepository.existsById(id))
-            throw new PaymentAttemptNotFoundException("Payment attempt not found with id: " + id);
-        paymentRepository.deleteById(id);
-
-    }
 }
