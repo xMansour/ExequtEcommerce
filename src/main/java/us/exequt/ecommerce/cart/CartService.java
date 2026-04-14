@@ -2,8 +2,18 @@ package us.exequt.ecommerce.cart;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import us.exequt.ecommerce.cart.domain.Cart;
+import us.exequt.ecommerce.cart.domain.CartItem;
+import us.exequt.ecommerce.cart.domain.CartStatus;
 import us.exequt.ecommerce.cart.dto.AddCartItemRequest;
 import us.exequt.ecommerce.cart.dto.CartResponse;
+import us.exequt.ecommerce.cart.exception.CartItemNotFoundException;
+import us.exequt.ecommerce.cart.exception.CartLockedException;
+import us.exequt.ecommerce.cart.exception.CartNotFoundException;
+import us.exequt.ecommerce.cart.exception.IllegalCartStateException;
+import us.exequt.ecommerce.cart.mapper.CartEntityToDtoMapper;
+import us.exequt.ecommerce.cart.mapper.CartItemDtoToEntityMapper;
+import us.exequt.ecommerce.cart.mapper.CartToCreateOrderRequestMapper;
 import us.exequt.ecommerce.order.OrderFacade;
 
 import java.util.List;

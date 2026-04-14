@@ -2,8 +2,9 @@ package us.exequt.ecommerce.mock;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import us.exequt.ecommerce.mock.exception.MockPaymentAttemptNotFoundException;
 import us.exequt.ecommerce.payment.PaymentFacade;
-import us.exequt.ecommerce.payment.PaymentStatus;
+import us.exequt.ecommerce.payment.domain.PaymentStatus;
 import us.exequt.ecommerce.payment.dto.PaymentAttemptResultRequest;
 
 import java.util.UUID;

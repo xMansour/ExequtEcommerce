@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import us.exequt.ecommerce.order.OrderStatus;
+import us.exequt.ecommerce.order.domain.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;
