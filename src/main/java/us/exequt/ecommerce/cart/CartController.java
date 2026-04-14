@@ -26,7 +26,7 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}/items")
-    public ResponseEntity<RestResponse<CartResponse>> addItemToCart(@PathVariable UUID cartId, AddCartItemRequest request) {
+    public ResponseEntity<RestResponse<CartResponse>> addItemToCart(@PathVariable UUID cartId, @RequestBody AddCartItemRequest request) {
         CartResponse updatedCart = cartService.addItemToCart(cartId, request);
         return ResponseEntity.ok(RestResponse.success("Item added to cart successfully", updatedCart));
     }
