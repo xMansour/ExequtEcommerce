@@ -3,6 +3,7 @@ package us.exequt.ecommerce.payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import us.exequt.ecommerce.payment.domain.PaymentAttempt;
 import us.exequt.ecommerce.payment.domain.PaymentStatus;
 import us.exequt.ecommerce.payment.dto.PaymentAttemptRequest;
@@ -33,12 +34,14 @@ public class PaymentService implements PaymentFacade {
                 .anyMatch(paymentAttempt -> paymentAttempt.getStatus() == PaymentStatus.PENDING);
     }
 
+    @Transactional
     @Override
     public void createPaymentAttempt(PaymentAttemptRequest request) {
         PaymentAttempt savedPayment = paymentRepository.save(paymentAttemptRequestToPaymentAttemptMapper.apply(request));
         paymentProviderGateway.initiatePayment(savedPayment.getId(), savedPayment.getAmount());
     }
 
+    @Transactional
     @Override
     public PaymentAttemptResponse processPaymentAttemptResult(PaymentAttemptResultRequest request) {
         PaymentAttempt paymentAttempt = paymentRepository.findById(request.getAttemptId())

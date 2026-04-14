@@ -3,6 +3,7 @@ package us.exequt.ecommerce.order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import us.exequt.ecommerce.order.domain.Order;
 import us.exequt.ecommerce.order.domain.OrderStatus;
 import us.exequt.ecommerce.order.dto.CreateOrderRequest;
@@ -34,6 +35,7 @@ public class OrderService implements OrderFacade {
         orderToOrderResponseMapper.apply(orderRepository.save(createOrderRequestToOrderMapper.apply(request)));
     }
 
+    @Transactional
     @Override
     public OrderResponse cancelOrder(UUID id) {
         Order order = orderRepository.findById(id)
@@ -54,6 +56,7 @@ public class OrderService implements OrderFacade {
         return orderToOrderResponseMapper.apply(savedOrder);
     }
 
+    @Transactional
     @Override
     public OrderResponse payForOrder(UUID id) {
         Order order = orderRepository.findById(id)
@@ -72,6 +75,7 @@ public class OrderService implements OrderFacade {
         return orderToOrderResponseMapper.apply(savedOrder);
     }
 
+    @Transactional
     @Override
     public void handlePaymentAttemptResult(UUID orderId, boolean success) {
         Order order = orderRepository.findById(orderId)

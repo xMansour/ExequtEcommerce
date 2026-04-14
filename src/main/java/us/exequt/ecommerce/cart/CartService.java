@@ -2,6 +2,7 @@ package us.exequt.ecommerce.cart;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import us.exequt.ecommerce.cart.domain.Cart;
 import us.exequt.ecommerce.cart.domain.CartItem;
 import us.exequt.ecommerce.cart.domain.CartStatus;
@@ -62,6 +63,7 @@ public class CartService implements CartFacade {
         return cartEntityToDtoMapper.apply(updatedCart);
     }
 
+    @Transactional
     @Override
     public CartResponse checkout(UUID cartId) {
         Cart cart = cartRepository.findById(cartId)
