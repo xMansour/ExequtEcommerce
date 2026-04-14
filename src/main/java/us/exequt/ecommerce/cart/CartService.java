@@ -61,7 +61,7 @@ public class CartService implements CartFacade {
     }
 
     @Override
-    public CartResponse create() {
+    public CartResponse createCart() {
         return cartEntityToDtoMapper.apply(cartRepository.save(new Cart()));
     }
 

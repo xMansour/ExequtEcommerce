@@ -19,7 +19,7 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<RestResponse<CartResponse>> createCart() {
-        CartResponse cart = cartService.create();
+        CartResponse cart = cartService.createCart();
         return ResponseEntity
                 .created(URI.create("/carts/" + cart.getId()))
                 .body(RestResponse.success("Cart created successfully", cart));
