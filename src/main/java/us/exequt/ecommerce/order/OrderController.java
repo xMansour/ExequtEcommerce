@@ -32,4 +32,10 @@ public class OrderController {
         OrderResponse order = orderService.cancelOrder(orderId);
         return ResponseEntity.ok(RestResponse.success("Order with id: " + orderId + " was canceled successfully", order));
     }
+
+    @PostMapping("/{orderId}/payment/start")
+    public ResponseEntity<RestResponse<OrderResponse>> payForOrder(@PathVariable UUID orderId) {
+        OrderResponse order = orderService.payForOrder(orderId);
+        return ResponseEntity.ok(RestResponse.success("Payment for order with id: " + orderId + " was initiated successfully", order));
+    }
 }

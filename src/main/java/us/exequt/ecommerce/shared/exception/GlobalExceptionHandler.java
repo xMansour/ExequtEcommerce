@@ -14,6 +14,8 @@ import us.exequt.ecommerce.cart.IllegalCartStateException;
 import us.exequt.ecommerce.order.IllegalOrderStateException;
 import us.exequt.ecommerce.order.OrderAlreadyCanceledException;
 import us.exequt.ecommerce.order.OrderNotFoundException;
+import us.exequt.ecommerce.payment.IllegalPaymentAttemptStateException;
+import us.exequt.ecommerce.payment.PaymentAttemptNotFoundException;
 import us.exequt.ecommerce.shared.RestResponse;
 
 import java.util.List;
@@ -80,6 +82,20 @@ public class GlobalExceptionHandler {
         log.debug(ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(RestResponse.error(HttpStatus.BAD_REQUEST.value(), request.getRequestURI(), "Illegal order state", List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler(PaymentAttemptNotFoundException.class)
+    public ResponseEntity<RestResponse<Void>> handlePaymentAttemptNotFoundException(PaymentAttemptNotFoundException ex, HttpServletRequest request) {
+        log.debug(ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(RestResponse.error(HttpStatus.NOT_FOUND.value(), request.getRequestURI(), "Payment attempt not found", List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler(IllegalPaymentAttemptStateException.class)
+    public ResponseEntity<RestResponse<Void>> handleIllegalPaymentAttemptStateException(IllegalPaymentAttemptStateException ex, HttpServletRequest request) {
+        log.debug(ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(RestResponse.error(HttpStatus.BAD_REQUEST.value(), request.getRequestURI(), "Illegal payment attempt state", List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(Exception.class)

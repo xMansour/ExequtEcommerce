@@ -8,5 +8,10 @@ import java.util.UUID;
 
 public interface OrderFacade extends BaseService<OrderResponse, UUID> {
     void createOrderFromCart(CreateOrderRequest request);
-        OrderResponse cancelOrder(UUID id);
+
+    OrderResponse cancelOrder(UUID id);
+
+    OrderResponse payForOrder(UUID id);
+
+    void handlePaymentAttemptResult(UUID orderId, boolean success);
 }
