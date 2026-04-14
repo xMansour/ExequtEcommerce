@@ -3,7 +3,6 @@ package us.exequt.ecommerce.cart;
 import org.springframework.stereotype.Component;
 import us.exequt.ecommerce.cart.dto.CartItemResponse;
 
-import java.math.BigDecimal;
 import java.util.function.Function;
 
 @Component
@@ -16,7 +15,7 @@ public class CartItemEntityToDtoMapper implements Function<CartItem, CartItemRes
                 .productId(cartItem.getProductId())
                 .quantity(cartItem.getQuantity())
                 .price(cartItem.getPrice())
-                .totalPrice(cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                .totalPrice(cartItem.totalPrice())
                 .createdAt(cartItem.getCreatedAt())
                 .updatedAt(cartItem.getUpdatedAt())
                 .version(cartItem.getVersion())

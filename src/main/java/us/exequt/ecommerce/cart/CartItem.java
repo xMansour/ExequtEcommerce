@@ -19,8 +19,11 @@ public class CartItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
-
     private UUID productId;
     private int quantity;
     private BigDecimal price;
+
+    public BigDecimal totalPrice() {
+        return price.multiply(BigDecimal.valueOf(quantity));
+    }
 }

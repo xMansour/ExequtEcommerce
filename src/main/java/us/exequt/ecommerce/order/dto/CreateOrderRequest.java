@@ -1,13 +1,12 @@
 package us.exequt.ecommerce.order.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import us.exequt.ecommerce.order.OrderStatus;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,13 +14,9 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderResponse {
-    private UUID id;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CreateOrderRequest {
     private UUID cartId;
-    private OrderStatus status;
+    private List<OrderItemRequest> items;
     private BigDecimal totalPrice;
-    private List<OrderItemResponse> items;
-    private Instant createdAt;
-    private Instant updatedAt;
-    private Long version;
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import us.exequt.ecommerce.cart.dto.AddCartItemRequest;
 import us.exequt.ecommerce.cart.dto.CartResponse;
+import us.exequt.ecommerce.order.OrderFacade;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,9 +12,11 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CartService implements CartFacade {
+    private final OrderFacade orderFacade;
     private final CartRepository cartRepository;
     private final CartEntityToDtoMapper cartEntityToDtoMapper;
     private final CartItemDtoToEntityMapper cartItemDtoToEntityMapper;
+    private final CartToCreateOrderRequestMapper cartToCreateOrderRequestMapper;
 
     @Override
     public CartResponse addItemToCart(UUID cartId, AddCartItemRequest request) {
@@ -54,9 +57,9 @@ public class CartService implements CartFacade {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + cartId));
 
-        //TODO:: create an order
         cart.setStatus(CartStatus.INACTIVE);
         Cart lockedCart = cartRepository.save(cart);
+        orderFacade.createOrderFromCart(cartToCreateOrderRequestMapper.apply(lockedCart));
         return cartEntityToDtoMapper.apply(lockedCart);
     }
 

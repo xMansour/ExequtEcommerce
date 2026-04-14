@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import us.exequt.ecommerce.shared.base.BaseEntity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,5 +27,11 @@ public class Cart extends BaseEntity {
     public void addItem(CartItem item) {
         item.setCart(this);
         this.items.add(item);
+    }
+
+    public BigDecimal totalPrice() {
+        return items.stream()
+                .map(CartItem::totalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
