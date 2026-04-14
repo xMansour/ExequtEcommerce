@@ -14,6 +14,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PaymentService implements PaymentFacade {
+    private final PaymentProviderGateway paymentProviderGateway;
     private final PaymentRepository paymentRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final PaymentAttemptToPaymentAttemptResponseMapper paymentAttemptToPaymentAttemptResponseMapper;
@@ -28,7 +29,8 @@ public class PaymentService implements PaymentFacade {
 
     @Override
     public void createPaymentAttempt(PaymentAttemptRequest request) {
-        paymentAttemptToPaymentAttemptResponseMapper.apply(paymentRepository.save(paymentAttemptRequestToPaymentAttemptMapper.apply(request)));
+        PaymentAttempt savedPayment = paymentRepository.save(paymentAttemptRequestToPaymentAttemptMapper.apply(request));
+        paymentProviderGateway.initiatePayment(savedPayment.getId(), savedPayment.getAmount());
     }
 
     @Override

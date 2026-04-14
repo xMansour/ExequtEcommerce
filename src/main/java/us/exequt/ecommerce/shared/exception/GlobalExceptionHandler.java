@@ -11,6 +11,7 @@ import us.exequt.ecommerce.cart.CartItemNotFoundException;
 import us.exequt.ecommerce.cart.CartLockedException;
 import us.exequt.ecommerce.cart.CartNotFoundException;
 import us.exequt.ecommerce.cart.IllegalCartStateException;
+import us.exequt.ecommerce.mock.MockPaymentAttemptNotFoundException;
 import us.exequt.ecommerce.order.IllegalOrderStateException;
 import us.exequt.ecommerce.order.OrderAlreadyCanceledException;
 import us.exequt.ecommerce.order.OrderNotFoundException;
@@ -96,6 +97,13 @@ public class GlobalExceptionHandler {
         log.debug(ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(RestResponse.error(HttpStatus.BAD_REQUEST.value(), request.getRequestURI(), "Illegal payment attempt state", List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler(MockPaymentAttemptNotFoundException.class)
+    public ResponseEntity<RestResponse<Void>> handleMockPaymentAttemptNotFoundException(MockPaymentAttemptNotFoundException ex, HttpServletRequest request) {
+        log.debug(ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(RestResponse.error(HttpStatus.NOT_FOUND.value(), request.getRequestURI(), "Mock payment attempt not found", List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(Exception.class)
