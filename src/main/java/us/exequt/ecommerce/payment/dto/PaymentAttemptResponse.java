@@ -18,7 +18,7 @@ import java.util.UUID;
 public class PaymentAttemptResponse {
     private UUID id;
     private UUID orderId;
-    private PaymentStatus status;
+    private PaymentStatus paymentStatus;
     private BigDecimal amount;
     private Instant createdAt;
     private Instant updatedAt;
